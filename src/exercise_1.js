@@ -9,8 +9,12 @@
  * isStringEmpty(); => throws error "text must be defined"
  */
 function isStringEmpty(text) {
-  // Your code here
+  if (text === undefined) {
+    throw new Error("text must be defined");
+  }
+  return text.trim() === '';
 }
+console.log(isStringEmpty("Jahongir"));
 
 /**
  * Write a function to truncate text
@@ -23,8 +27,16 @@ function isStringEmpty(text) {
  * truncateString(''); => throws error "text must have at least one character"
  */
 function truncateString(text, numberOfCharacters) {
-  // Your code here
+  if (text === undefined || text.length === 0) {
+    throw new Error("text must have at least one character");
+  }
+  if (numberOfCharacters === undefined) {
+    throw new Error("Please specify number of characters to extract");
+  }
+  return text.slice(0, numberOfCharacters);
 }
+
+console.log(truncateString("Jahongir", 5))
 
 /**
  * Write a function to create social media post hash tag
@@ -38,7 +50,18 @@ function truncateString(text, numberOfCharacters) {
  * createHashTag('   '); => throws error "Text should have at least three characters"
  */
 function createHashTag(text) {
-  // Your code here
+  if (!text || text.trim().length < 3) {
+    throw new Error("Text should have at least three characters");
+  }
+  const words = text.trim().toLowerCase().split(/\s+/);
+  return (
+    "#" +
+    words
+      .map((word, index) =>
+        index === 0 ? word : word[0].toUpperCase() + word.slice(1)
+      )
+      .join("")
+  );
 }
 
 /**
@@ -53,9 +76,18 @@ function createHashTag(text) {
  * formatPhoneNumber(777665544332211); => throws error "Phone number must be either 9 or 12 characters long"
  * formatPhoneNumber(); => throws error "Phone number must be either 9 or 12 characters long"
  */
-function formatPhoneNumber(phoneNumber) {
-  // Your code here
-}
+function formatPhoneNumber(phoneNumber){
+  const phoneNum = phoneNumber?.toString();
+  if (phoneNum.length === 9) {
+     return `+998 ${phoneNum.slice(0, 2)} ${phoneNum.slice(2, 5)} ${phoneNum.slice(5, 7)} ${phoneNum.slice(7,9)}`
+  } else if (phoneNum.length === 12){
+     return `+${phoneNum.slice(0, 3)} ${phoneNum.slice(3, 5)} ${phoneNum.slice(5, 8)} ${phoneNum.slice(8, 10)} ${phoneNum.slice(10, 12)}`
+  }else {
+     throw new Error("Phone number must be either 9 or 12 characters long");
+  }
+ }
+ 
+   console.log(formatPhoneNumber(909905635))
 
 /**
  * Write a function that transforms text to different cases
@@ -69,8 +101,24 @@ function formatPhoneNumber(phoneNumber) {
  * 
  */
 function changeTextCase(text, caseName) {
-  // Your code here
+  if (!text) throw new Error("Text is required");
+  const words = text.toLowerCase().split(/\s+/);
+  switch (caseName) {
+    case "camel":
+      return words
+        .map((word, index) =>
+          index === 0 ? word : word[0].toUpperCase() + word.slice(1)
+        )
+        .join("");
+    case "kebab":
+      return words.join("-");
+    case "snake":
+      return words.join("_");
+    default:
+      throw new Error("Invalid case name");
+  }
 }
+console.log(changeTextCase("Hello World", "snake"))
 
 /**
  * Write a function to replace a given word in the text with the replacement word
@@ -86,8 +134,14 @@ function changeTextCase(text, caseName) {
  * 'Winnie-the-Puff (also known as Edward Bear, Puff Bear or simply Puff) is a fictional anthropomorphic teddy bear created by English author A. A. Milne and English illustrator E. H. Shepard. Winnie-the-Puff first appeared by name in a children's story commissioned by London's Evening News for Christmas Eve 1925. The character is inspired by a stuffed toy that Milne had bought for his son Christopher Robin in Harrods department store, and a bear they had viewed at London Zoo.'
  */
 function replaceWordInText(text, word, replacement) {
-  // Your code here
+  if (!text || !word || !replacement) {
+    throw new Error("All arguments must be provided");
+  }
+  const regex = new RegExp(`\\b${word}\\b`, "g");
+  return text.replace(regex, replacement);
 }
+
+console.log(replaceWordInText("Winnie-the-Pooh (also known as Edward Bear, Pooh Bear or simply Pooh) is a fictional anthropomorphic teddy bear created by English author A. A. Milne and English illustrator E. H. Shepard. Winnie-the-Pooh first appeared by name in a children's story commissioned by London's Evening News for Christmas Eve 1925. The character is inspired by a stuffed toy that Milne had bought for his son Christopher Robin in Harrods department store, and a bear they had viewed at London Zoo.", "Pooh", "Puff"))
 
 /**
  * Write a function to extract price in number format from the text
@@ -99,8 +153,12 @@ function replaceWordInText(text, word, replacement) {
  * extractPriceFromText('There were no apples left in the shop'); => 'No matching price was found'
  */
 function extractPriceFromText(text) {
-  // Your code here
+  const match = text.match(/\$([\d.]+)/);
+  if (!match) return "No matching price was found";
+  return parseFloat(match[1]);
 }
+
+console.log(extractPriceFromText('Apple price in market is per kg now'))
 
 module.exports = {
   changeTextCase,
